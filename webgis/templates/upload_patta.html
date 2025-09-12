@@ -1,0 +1,390 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Upload Patta - FRA Atlas</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --primary-gradient: linear-gradient(135deg, #0d4f3c 0%, #1b5e20 25%, #2e7d32 50%, #4caf50 75%, #81c784 100%);
+            --surface-gradient: linear-gradient(135deg, #ffffff 0%, #f1f8e9 100%);
+            --card-gradient: linear-gradient(135deg, #ffffff 0%, #f9fbe7 100%);
+            --text-primary: #1a1a1a;
+            --text-secondary: #2e7d32;
+            --border-color: #c8e6c9;
+            --shadow: 0 8px 32px rgba(13, 79, 60, 0.08);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background: linear-gradient(135deg, #f1f8e9 0%, #e8f5e8 50%, #c8e6c9 100%);
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        .upload-container {
+            max-width: 800px;
+            margin: 0 auto;
+            background: var(--card-gradient);
+            border-radius: 20px;
+            box-shadow: var(--shadow);
+            overflow: hidden;
+        }
+
+        .upload-header {
+            background: var(--primary-gradient);
+            color: white;
+            padding: 30px 40px;
+            text-align: center;
+        }
+
+        .upload-header h1 {
+            font-size: 2rem;
+            font-weight: 600;
+            margin-bottom: 10px;
+        }
+
+        .upload-header p {
+            opacity: 0.9;
+            font-size: 1.1rem;
+        }
+
+        .upload-form {
+            padding: 40px;
+        }
+
+        .form-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 25px;
+            margin-bottom: 25px;
+        }
+
+        .form-group {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+
+        .form-group.full-width {
+            grid-column: 1 / -1;
+        }
+
+        .form-group label {
+            font-weight: 600;
+            color: var(--text-primary);
+            font-size: 0.95rem;
+        }
+
+        .form-group input,
+        .form-group select,
+        .form-group textarea {
+            padding: 16px;
+            border: 2px solid var(--border-color);
+            border-radius: 12px;
+            font-size: 1rem;
+            transition: all 0.3s ease;
+            background: white;
+        }
+
+        .form-group input:focus,
+        .form-group select:focus,
+        .form-group textarea:focus {
+            outline: none;
+            border-color: #2e7d32;
+            box-shadow: 0 0 0 3px rgba(46, 125, 50, 0.1);
+        }
+
+        .file-upload {
+            border: 2px dashed var(--border-color);
+            border-radius: 12px;
+            padding: 40px;
+            text-align: center;
+            background: var(--surface-gradient);
+            transition: all 0.3s ease;
+            cursor: pointer;
+        }
+
+        .file-upload:hover {
+            border-color: #2e7d32;
+            background: #f1f8e9;
+        }
+
+        .file-upload.dragover {
+            border-color: #2e7d32;
+            background: #e8f5e8;
+        }
+
+        .file-upload-icon {
+            font-size: 3rem;
+            margin-bottom: 15px;
+        }
+
+        .file-upload h3 {
+            color: var(--text-primary);
+            margin-bottom: 10px;
+        }
+
+        .file-upload p {
+            color: var(--text-secondary);
+            margin-bottom: 20px;
+        }
+
+        .file-input {
+            display: none;
+        }
+
+        .file-select-btn {
+            background: var(--primary-gradient);
+            color: white;
+            border: none;
+            padding: 12px 24px;
+            border-radius: 8px;
+            cursor: pointer;
+            font-weight: 500;
+        }
+
+        .selected-file {
+            margin-top: 15px;
+            padding: 15px;
+            background: #d4edda;
+            border-radius: 8px;
+            color: #155724;
+            display: none;
+        }
+
+        .form-actions {
+            display: flex;
+            gap: 15px;
+            justify-content: center;
+            margin-top: 30px;
+        }
+
+        .btn {
+            padding: 16px 32px;
+            border: none;
+            border-radius: 12px;
+            font-size: 1.1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-decoration: none;
+            display: inline-flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .btn-primary {
+            background: var(--primary-gradient);
+            color: white;
+        }
+
+        .btn-secondary {
+            background: var(--surface-gradient);
+            color: var(--text-secondary);
+            border: 2px solid var(--border-color);
+        }
+
+        .btn:hover {
+            transform: translateY(-2px);
+        }
+
+        .btn:disabled {
+            opacity: 0.6;
+            cursor: not-allowed;
+            transform: none;
+        }
+
+        @media (max-width: 768px) {
+            .form-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .upload-form {
+                padding: 30px 20px;
+            }
+
+            .form-actions {
+                flex-direction: column;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="upload-container">
+        <div class="upload-header">
+            <h1>📁 Upload Patta Document</h1>
+            <p>Add new landholding document to the FRA Atlas system</p>
+        </div>
+
+        <div class="upload-form">
+            <!-- Flash Messages -->
+            {% with messages = get_flashed_messages(with_categories=true) %}
+                {% if messages %}
+                    {% for category, message in messages %}
+                        <div style="margin-bottom: 20px; padding: 15px; border-radius: 8px; {% if category == 'success' %}background: #d4edda; color: #155724;{% elif category == 'error' %}background: #f8d7da; color: #721c24;{% endif %}">
+                            {{ message }}
+                        </div>
+                    {% endfor %}
+                {% endif %}
+            {% endwith %}
+
+            <form method="POST" enctype="multipart/form-data">
+                <div class="form-grid">
+                    <div class="form-group">
+                        <label for="village">Village Name *</label>
+                        <input type="text" id="village" name="village" required 
+                               placeholder="Enter village name">
+                    </div>
+
+                    <div class="form-group">
+                        <label for="patta_holder">Patta Holder Name *</label>
+                        <input type="text" id="patta_holder" name="patta_holder" required 
+                               placeholder="Enter patta holder name">
+                    </div>
+
+                    <div class="form-group">
+                        <label for="latitude">Latitude *</label>
+                        <input type="number" id="latitude" name="latitude" step="0.0001" required 
+                               placeholder="e.g., 21.8225">
+                    </div>
+
+                    <div class="form-group">
+                        <label for="longitude">Longitude *</label>
+                        <input type="number" id="longitude" name="longitude" step="0.0001" required 
+                               placeholder="e.g., 75.6102">
+                    </div>
+
+                    <div class="form-group">
+                        <label for="area_hectares">Area (Hectares) *</label>
+                        <input type="number" id="area_hectares" name="area_hectares" step="0.01" required 
+                               placeholder="e.g., 2.5">
+                    </div>
+
+                    <div class="form-group">
+                        <label for="tribal_group">Tribal Group</label>
+                        <select id="tribal_group" name="tribal_group" required>
+                            <option value="">Select Tribal Group</option>
+                            <option value="Bhil">Bhil</option>
+                            <option value="Korku">Korku</option>
+                            <option value="Bhilala">Bhilala</option>
+                            <option value="Gond">Gond</option>
+                            <option value="Baiga">Baiga</option>
+                            <option value="Other">Other</option>
+                        </select>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="family_size">Family Size</label>
+                        <input type="number" id="family_size" name="family_size" min="1" required 
+                               placeholder="Number of family members">
+                    </div>
+                </div>
+
+                <div class="form-group full-width">
+                    <label>Patta Document (PDF only) *</label>
+                    <div class="file-upload" onclick="document.getElementById('patta_file').click()">
+                        <div class="file-upload-icon">📄</div>
+                        <h3>Upload Patta Document</h3>
+                        <p>Click to select or drag and drop your PDF file here</p>
+                        <button type="button" class="file-select-btn">Choose File</button>
+                        <div class="selected-file" id="selected-file">
+                            <span id="file-name"></span>
+                        </div>
+                    </div>
+                    <input type="file" id="patta_file" name="patta_file" class="file-input" 
+                           accept=".pdf" required>
+                </div>
+
+                <div class="form-actions">
+                    <a href="{{ url_for('admin_panel') }}" class="btn btn-secondary">
+                        ← Back to Admin
+                    </a>
+                    <button type="submit" class="btn btn-primary" id="submit-btn">
+                        📤 Upload Patta Document
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <script>
+        // File upload handling
+        const fileInput = document.getElementById('patta_file');
+        const fileUpload = document.querySelector('.file-upload');
+        const selectedFile = document.getElementById('selected-file');
+        const fileName = document.getElementById('file-name');
+        const submitBtn = document.getElementById('submit-btn');
+
+        fileInput.addEventListener('change', function(e) {
+            if (e.target.files.length > 0) {
+                const file = e.target.files[0];
+                fileName.textContent = `Selected: ${file.name} (${(file.size / 1024 / 1024).toFixed(2)} MB)`;
+                selectedFile.style.display = 'block';
+                submitBtn.disabled = false;
+            }
+        });
+
+        // Drag and drop
+        fileUpload.addEventListener('dragover', function(e) {
+            e.preventDefault();
+            fileUpload.classList.add('dragover');
+        });
+
+        fileUpload.addEventListener('dragleave', function(e) {
+            e.preventDefault();
+            fileUpload.classList.remove('dragover');
+        });
+
+        fileUpload.addEventListener('drop', function(e) {
+            e.preventDefault();
+            fileUpload.classList.remove('dragover');
+            
+            const files = e.dataTransfer.files;
+            if (files.length > 0) {
+                fileInput.files = files;
+                fileInput.dispatchEvent(new Event('change'));
+            }
+        });
+
+        // Form validation
+        document.querySelector('form').addEventListener('submit', function(e) {
+            const requiredFields = document.querySelectorAll('input[required], select[required]');
+            let isValid = true;
+
+            requiredFields.forEach(field => {
+                if (!field.value.trim()) {
+                    isValid = false;
+                    field.style.borderColor = '#dc3545';
+                } else {
+                    field.style.borderColor = '#c8e6c9';
+                }
+            });
+
+            if (!isValid) {
+                e.preventDefault();
+                alert('Please fill in all required fields.');
+            } else {
+                submitBtn.disabled = true;
+                submitBtn.innerHTML = '⏳ Uploading...';
+            }
+        });
+
+        // Auto-hide flash messages
+        setTimeout(() => {
+            const flashMessages = document.querySelectorAll('[style*="background: #d4edda"], [style*="background: #f8d7da"]');
+            flashMessages.forEach(msg => {
+                msg.style.opacity = '0';
+                setTimeout(() => msg.remove(), 300);
+            });
+        }, 4000);
+    </script>
+</body>
+</html>
