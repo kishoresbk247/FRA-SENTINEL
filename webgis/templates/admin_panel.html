@@ -1,0 +1,643 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin Panel - FRA Sentinel</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link href="{{ url_for('static', filename='css/unified-buttons.css') }}" rel="stylesheet">
+    <style>
+        :root {
+            --primary-gradient: linear-gradient(135deg, #0d4f3c 0%, #1b5e20 25%, #2e7d32 50%, #4caf50 75%, #81c784 100%);
+            --text-primary: #1a1a1a;
+            --text-secondary: #2e7d32;
+            --border-radius: 16px;
+            --shadow: 0 8px 32px rgba(13, 79, 60, 0.08);
+            --spacing-md: 16px;
+            --spacing-lg: 24px;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background: linear-gradient(135deg, #f1f8e9 0%, #e8f5e8 100%);
+            min-height: 100vh;
+        }
+
+        .top-navbar {
+            background: var(--primary-gradient);
+            color: white;
+            padding: 12px 24px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            box-shadow: 0 4px 20px rgba(13, 79, 60, 0.3);
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+        }
+
+        .navbar-brand h1 {
+            font-size: 1.8rem;
+            font-weight: 700;
+            margin: 0;
+        }
+
+        .back-btn {
+            background: rgba(255,255,255,0.2);
+            color: white;
+            padding: 8px 16px;
+            border-radius: 20px;
+            text-decoration: none;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .back-btn:hover {
+            background: rgba(255,255,255,0.3);
+            transform: translateY(-2px);
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: var(--spacing-lg);
+        }
+
+        .page-header {
+            text-align: center;
+            margin-bottom: var(--spacing-lg);
+        }
+
+        .page-title {
+            font-size: 2.5rem;
+            font-weight: 700;
+            color: var(--text-secondary);
+            margin-bottom: 0.5rem;
+        }
+
+        .page-subtitle {
+            font-size: 1.1rem;
+            color: #666;
+        }
+
+        .admin-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: var(--spacing-lg);
+            margin-bottom: var(--spacing-lg);
+        }
+
+        .admin-card {
+            background: white;
+            border-radius: var(--border-radius);
+            padding: var(--spacing-lg);
+            box-shadow: var(--shadow);
+            border: 1px solid #e0e0e0;
+        }
+
+        .card-header {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            margin-bottom: var(--spacing-md);
+        }
+
+        .card-icon {
+            font-size: 2rem;
+        }
+
+        .card-title {
+            font-size: 1.3rem;
+            font-weight: 600;
+            color: var(--text-secondary);
+        }
+
+        .file-list {
+            max-height: 400px;
+            overflow-y: auto;
+        }
+
+        .file-item {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding: 12px;
+            border: 1px solid #e0e0e0;
+            border-radius: 8px;
+            margin-bottom: 8px;
+            transition: all 0.3s ease;
+        }
+
+        .file-item:hover {
+            background: #f8f9fa;
+            border-color: var(--text-secondary);
+        }
+
+        .file-icon {
+            font-size: 1.5rem;
+        }
+
+        .file-info {
+            flex: 1;
+        }
+
+        .file-name {
+            font-weight: 600;
+            font-size: 0.95rem;
+            margin-bottom: 2px;
+        }
+
+        .file-details {
+            font-size: 0.8rem;
+            color: #666;
+        }
+
+        .file-actions {
+            display: flex;
+            gap: 6px;
+        }
+
+        .action-btn {
+            background: #f0f0f0;
+            border: none;
+            padding: 6px 10px;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 0.8rem;
+            transition: all 0.2s ease;
+        }
+
+        .action-btn:hover {
+            background: var(--text-secondary);
+            color: white;
+        }
+
+        .action-btn.danger:hover {
+            background: #f44336;
+        }
+
+        .upload-section {
+            background: white;
+            border-radius: var(--border-radius);
+            padding: var(--spacing-lg);
+            box-shadow: var(--shadow);
+            margin-bottom: var(--spacing-lg);
+        }
+
+        .upload-title {
+            font-size: 1.3rem;
+            font-weight: 600;
+            color: var(--text-secondary);
+            margin-bottom: var(--spacing-md);
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .upload-form {
+            display: flex;
+            flex-direction: column;
+            gap: var(--spacing-md);
+        }
+
+        .form-row {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: var(--spacing-md);
+        }
+
+        .file-upload-area {
+            position: relative;
+            border: 2px dashed #e0e0e0;
+            border-radius: 8px;
+            padding: 24px;
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            background: #fafafa;
+        }
+
+        .file-upload-area:hover {
+            border-color: var(--text-secondary);
+            background: #f0f9ff;
+        }
+
+        .file-input-hidden {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            opacity: 0;
+            cursor: pointer;
+        }
+
+        .file-upload-display {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .file-icon {
+            font-size: 2rem;
+            color: #666;
+        }
+
+        .file-text {
+            font-size: 0.9rem;
+            color: #333;
+            font-weight: 500;
+        }
+
+        .file-subtext {
+            font-size: 0.8rem;
+            color: #666;
+        }
+
+        .form-group {
+            display: flex;
+            flex-direction: column;
+            gap: 6px;
+        }
+
+        .form-label {
+            font-size: 0.9rem;
+            color: #666;
+            font-weight: 500;
+        }
+
+        .form-input {
+            padding: 10px 12px;
+            border: 1px solid #e0e0e0;
+            border-radius: 8px;
+            font-size: 0.9rem;
+            background: white;
+        }
+
+        .form-input:focus {
+            outline: none;
+            border-color: var(--text-secondary);
+        }
+
+        .file-input {
+            padding: 8px;
+            border: 2px dashed #e0e0e0;
+            border-radius: 8px;
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .file-input:hover {
+            border-color: var(--text-secondary);
+            background: #f8f9fa;
+        }
+
+        .upload-btn {
+            background: var(--primary-gradient);
+            color: white;
+            border: none;
+            padding: 12px 24px;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 1rem;
+            font-weight: 600;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+        }
+
+        .upload-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(13, 79, 60, 0.3);
+        }
+
+        .upload-btn:disabled {
+            opacity: 0.6;
+            cursor: not-allowed;
+            transform: none;
+        }
+
+        .stats-section {
+            background: white;
+            border-radius: var(--border-radius);
+            padding: var(--spacing-lg);
+            box-shadow: var(--shadow);
+        }
+
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+            gap: var(--spacing-md);
+        }
+
+        .stat-item {
+            text-align: center;
+            padding: var(--spacing-md);
+            background: #f8f9fa;
+            border-radius: 8px;
+        }
+
+        .stat-number {
+            font-size: 2rem;
+            font-weight: 700;
+            color: var(--text-secondary);
+            margin-bottom: 4px;
+        }
+
+        .stat-label {
+            font-size: 0.9rem;
+            color: #666;
+        }
+    </style>
+</head>
+<body>
+    <!-- Top Navigation -->
+    <nav class="top-navbar">
+        <div class="navbar-brand">
+            <h1>⚙️ Admin Panel</h1>
+        </div>
+        <a href="{{ url_for('dashboard') }}" class="back-btn">
+            ← Back to Dashboard
+        </a>
+    </nav>
+
+    <!-- Main Container -->
+    <div class="container">
+        <!-- Page Header -->
+        <div class="page-header">
+            <h1 class="page-title">Upload Patta Document</h1>
+            <p class="page-subtitle">Add new landholding document to the FRA Atlas system</p>
+        </div>
+
+        <!-- Flash Messages -->
+        {% with messages = get_flashed_messages(with_categories=true) %}
+            {% if messages %}
+                {% for category, message in messages %}
+                    <div class="flash-message flash-{{ category }}" style="background: {% if category == 'success' %}linear-gradient(135deg, #4caf50 0%, #66bb6a 100%){% else %}linear-gradient(135deg, #f44336 0%, #ef5350 100%){% endif %}; color: white; padding: 16px; border-radius: 12px; margin-bottom: 24px; box-shadow: 0 4px 12px rgba(0,0,0,0.15);">
+                        <div style="display: flex; align-items: center; gap: 12px;">
+                            <span style="font-size: 1.2rem;">{% if category == 'success' %}✅{% else %}❌{% endif %}</span>
+                            <span style="font-weight: 500;">{{ message }}</span>
+                        </div>
+                    </div>
+                {% endfor %}
+            {% endif %}
+        {% endwith %}
+
+        <!-- Upload Section -->
+        <div class="upload-section">
+            <h2 class="upload-title">📄 Upload Patta Document</h2>
+            <p style="color: #666; margin-bottom: 24px;">Add new landholding document to the FRA Atlas system</p>
+            <form class="upload-form" action="{{ url_for('upload_patta') }}" method="post" enctype="multipart/form-data">
+                <div class="form-row">
+                    <div class="form-group">
+                        <label class="form-label">Village Name*</label>
+                        <input type="text" class="form-input" name="village" placeholder="Enter village name" required>
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">Patta Holder Name*</label>
+                        <input type="text" class="form-input" name="patta_holder" placeholder="Enter patta holder name" required>
+                    </div>
+                </div>
+                <div class="form-row">
+                    <div class="form-group">
+                        <label class="form-label">Latitude*</label>
+                        <input type="text" class="form-input" name="latitude" placeholder="e.g., 21.8225" required>
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">Longitude*</label>
+                        <input type="text" class="form-input" name="longitude" placeholder="e.g., 75.6102" required>
+                    </div>
+                </div>
+                <div class="form-row">
+                    <div class="form-group">
+                        <label class="form-label">Area (Hectares)*</label>
+                        <input type="text" class="form-input" name="area_hectares" placeholder="e.g., 2.5" required>
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">Tribal Group</label>
+                        <select class="form-input" name="tribal_group">
+                            <option value="">Select Tribal Group</option>
+                            <option value="gond">Gond</option>
+                            <option value="bhil">Bhil</option>
+                            <option value="baiga">Baiga</option>
+                            <option value="kol">Kol</option>
+                            <option value="other">Other</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="form-row">
+                    <div class="form-group">
+                        <label class="form-label">Family Size</label>
+                        <input type="number" class="form-input" name="family_size" placeholder="Number of family members">
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">Patta Document (PDF only)*</label>
+                        <div class="file-upload-area">
+                            <input type="file" class="file-input-hidden" name="patta_file" accept=".pdf" required>
+                            <div class="file-upload-display">
+                                <span class="file-icon">📄</span>
+                                <span class="file-text">Click to upload or drag and drop</span>
+                                <span class="file-subtext">PDF files only</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <button type="submit" class="btn-unified btn-primary btn-lg">
+                    <span>📤</span>
+                    Upload Patta Document
+                </button>
+            </form>
+        </div>
+
+        <!-- Admin Grid -->
+        <div class="admin-grid">
+            <!-- File Management -->
+            <div class="admin-card">
+                <div class="card-header">
+                    <span class="card-icon">📁</span>
+                    <h3 class="card-title">File Management</h3>
+                </div>
+                <div class="file-list">
+                    <div class="file-item">
+                        <span class="file-icon">📄</span>
+                        <div class="file-info">
+                            <div class="file-name">Khargone_Patta_001.pdf</div>
+                            <div class="file-details">Uploaded 2 hours ago • 2.3 MB • Processed</div>
+                        </div>
+                        <div class="file-actions">
+                            <button class="action-btn" onclick="downloadFile('khargone_patta_001.pdf')">📥</button>
+                            <button class="action-btn" onclick="viewFile('khargone_patta_001.pdf')">👁️</button>
+                            <button class="action-btn danger" onclick="deleteFile('khargone_patta_001.pdf')">🗑️</button>
+                        </div>
+                    </div>
+                    <div class="file-item">
+                        <span class="file-icon">📄</span>
+                        <div class="file-info">
+                            <div class="file-name">Mandla_Claim_002.pdf</div>
+                            <div class="file-details">Uploaded 1 day ago • 1.8 MB • Processing</div>
+                        </div>
+                        <div class="file-actions">
+                            <button class="action-btn" onclick="downloadFile('mandla_claim_002.pdf')">📥</button>
+                            <button class="action-btn" onclick="viewFile('mandla_claim_002.pdf')">👁️</button>
+                            <button class="action-btn danger" onclick="deleteFile('mandla_claim_002.pdf')">🗑️</button>
+                        </div>
+                    </div>
+                    <div class="file-item">
+                        <span class="file-icon">📄</span>
+                        <div class="file-info">
+                            <div class="file-name">Dindori_Survey_003.pdf</div>
+                            <div class="file-details">Uploaded 3 days ago • 3.1 MB • Processed</div>
+                        </div>
+                        <div class="file-actions">
+                            <button class="action-btn" onclick="downloadFile('dindori_survey_003.pdf')">📥</button>
+                            <button class="action-btn" onclick="viewFile('dindori_survey_003.pdf')">👁️</button>
+                            <button class="action-btn danger" onclick="deleteFile('dindori_survey_003.pdf')">🗑️</button>
+                        </div>
+                    </div>
+                    <div class="file-item">
+                        <span class="file-icon">📄</span>
+                        <div class="file-info">
+                            <div class="file-name">Barwani_Verification_004.pdf</div>
+                            <div class="file-details">Uploaded 1 week ago • 2.7 MB • Processed</div>
+                        </div>
+                        <div class="file-actions">
+                            <button class="action-btn" onclick="downloadFile('barwani_verification_004.pdf')">📥</button>
+                            <button class="action-btn" onclick="viewFile('barwani_verification_004.pdf')">👁️</button>
+                            <button class="action-btn danger" onclick="deleteFile('barwani_verification_004.pdf')">🗑️</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- System Statistics -->
+            <div class="admin-card">
+                <div class="card-header">
+                    <span class="card-icon">📊</span>
+                    <h3 class="card-title">System Statistics</h3>
+                </div>
+                <div class="stats-grid">
+                    <div class="stat-item">
+                        <div class="stat-number">47</div>
+                        <div class="stat-label">Total Files</div>
+                    </div>
+                    <div class="stat-item">
+                        <div class="stat-number">42</div>
+                        <div class="stat-label">Processed</div>
+                    </div>
+                    <div class="stat-item">
+                        <div class="stat-number">5</div>
+                        <div class="stat-label">Pending</div>
+                    </div>
+                    <div class="stat-item">
+                        <div class="stat-number">89%</div>
+                        <div class="stat-label">Success Rate</div>
+                    </div>
+                    <div class="stat-item">
+                        <div class="stat-number">156MB</div>
+                        <div class="stat-label">Storage Used</div>
+                    </div>
+                    <div class="stat-item">
+                        <div class="stat-number">2.3s</div>
+                        <div class="stat-label">Avg Process Time</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- File Statistics -->
+        <div class="stats-section">
+            <h2 class="upload-title">📈 File Processing Statistics</h2>
+            <div class="stats-grid">
+                <div class="stat-item">
+                    <div class="stat-number">23</div>
+                    <div class="stat-label">Patta Documents</div>
+                </div>
+                <div class="stat-item">
+                    <div class="stat-number">15</div>
+                    <div class="stat-label">FRA Claims</div>
+                </div>
+                <div class="stat-item">
+                    <div class="stat-number">6</div>
+                    <div class="stat-label">Survey Reports</div>
+                </div>
+                <div class="stat-item">
+                    <div class="stat-number">3</div>
+                    <div class="stat-label">Verification Reports</div>
+                </div>
+                <div class="stat-item">
+                    <div class="stat-number">12</div>
+                    <div class="stat-label">This Month</div>
+                </div>
+                <div class="stat-item">
+                    <div class="stat-number">35</div>
+                    <div class="stat-label">Last Month</div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        function downloadFile(filename) {
+            alert(`📥 Downloading ${filename}\n\nThe file will be downloaded to your Downloads folder.`);
+        }
+
+        function viewFile(filename) {
+            alert(`👁️ Viewing ${filename}\n\nThe document will open in a new tab for preview.`);
+        }
+
+        function deleteFile(filename) {
+            if (confirm(`🗑️ Are you sure you want to delete ${filename}?\n\nThis action cannot be undone.`)) {
+                alert(`✅ ${filename} has been deleted successfully.`);
+            }
+        }
+
+        // File upload display handling
+        const fileInput = document.querySelector('.file-input-hidden');
+        const fileDisplay = document.querySelector('.file-upload-display');
+        
+        fileInput.addEventListener('change', function(e) {
+            const file = e.target.files[0];
+            if (file) {
+                fileDisplay.innerHTML = `
+                    <span class="file-icon">📄</span>
+                    <span class="file-text">${file.name}</span>
+                    <span class="file-subtext">${(file.size / 1024 / 1024).toFixed(2)} MB</span>
+                `;
+            }
+        });
+
+        // File upload progress handling
+        document.querySelector('form').addEventListener('submit', function(e) {
+            const uploadBtn = document.querySelector('.btn-unified');
+            const originalText = uploadBtn.innerHTML;
+            
+            uploadBtn.innerHTML = '<span>⏳</span> Uploading...';
+            uploadBtn.disabled = true;
+            
+            // Let the form submit naturally - the server will handle the response
+        });
+
+        console.log('⚙️ Admin Panel loaded successfully');
+    </script>
+</body>
+</html>
+
+
+
+
+
+
+
+

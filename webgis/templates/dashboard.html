@@ -3,9 +3,10 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>FRA Atlas - Ultimate Dashboard</title>
+    <title>FRA Sentinel - Advanced Forest Rights Monitoring System</title>
     <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link href="{{ url_for('static', filename='css/unified-buttons.css') }}" rel="stylesheet">
     <style>
     :root {
     /* Beautiful Green Gradient Color Palette */
@@ -38,6 +39,242 @@
     --spacing-xl: 32px;
     --spacing-xxl: 48px;
 }
+/* Top Navigation Bar Styles */
+.top-navbar {
+    background: linear-gradient(135deg, #0d4f3c 0%, #1b5e20 25%, #2e7d32 50%, #4caf50 75%, #81c784 100%);
+    color: white;
+    padding: 12px 24px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    box-shadow: 0 4px 20px rgba(13, 79, 60, 0.3);
+    position: sticky;
+    top: 0;
+    z-index: 1000;
+    backdrop-filter: blur(10px);
+}
+
+.navbar-brand h1 {
+    font-size: 1.8rem;
+    font-weight: 700;
+    margin: 0;
+    text-shadow: 0 2px 4px rgba(0,0,0,0.3);
+}
+
+.navbar-center {
+    flex: 1;
+    display: flex;
+    justify-content: center;
+}
+
+.nav-features {
+    display: flex;
+    gap: 8px;
+}
+
+.nav-btn {
+    background: rgba(255,255,255,0.15);
+    border: 1px solid rgba(255,255,255,0.2);
+    color: white;
+    padding: 8px 16px;
+    border-radius: 20px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    font-size: 0.9rem;
+    font-weight: 500;
+    backdrop-filter: blur(10px);
+    text-decoration: none;
+}
+
+.nav-btn:hover {
+    background: rgba(255,255,255,0.25);
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(0,0,0,0.2);
+}
+
+.nav-icon {
+    font-size: 1.1rem;
+}
+
+.navbar-right {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+}
+
+.language-switcher select {
+    background: rgba(255,255,255,0.15);
+    border: 1px solid rgba(255,255,255,0.2);
+    color: white;
+    padding: 6px 12px;
+    border-radius: 15px;
+    font-size: 0.85rem;
+    cursor: pointer;
+    backdrop-filter: blur(10px);
+}
+
+.language-switcher select option {
+    background: #1b5e20;
+    color: white;
+}
+
+.user-profile {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    background: rgba(255,255,255,0.1);
+    padding: 6px 12px;
+    border-radius: 20px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+.user-profile:hover {
+    background: rgba(255,255,255,0.2);
+}
+
+.profile-avatar {
+    width: 32px;
+    height: 32px;
+    background: rgba(255,255,255,0.2);
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.avatar-icon {
+    font-size: 1.2rem;
+}
+
+.profile-info {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+}
+
+.profile-name {
+    font-size: 0.9rem;
+    font-weight: 600;
+    line-height: 1;
+}
+
+.profile-role {
+    font-size: 0.75rem;
+    opacity: 0.8;
+    line-height: 1;
+}
+
+.admin-dropdown {
+    position: relative;
+}
+
+.admin-btn {
+    background: rgba(255,255,255,0.15);
+    border: 1px solid rgba(255,255,255,0.2);
+    color: white;
+    padding: 8px 16px;
+    border-radius: 20px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    font-size: 0.9rem;
+    font-weight: 500;
+    backdrop-filter: blur(10px);
+}
+
+.admin-btn:hover {
+    background: rgba(255,255,255,0.25);
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(0,0,0,0.2);
+}
+
+.dropdown-arrow {
+    font-size: 0.7rem;
+    transition: transform 0.3s ease;
+}
+
+.admin-menu {
+    position: absolute;
+    top: 100%;
+    right: 0;
+    background: white;
+    border-radius: 12px;
+    box-shadow: 0 8px 32px rgba(0,0,0,0.15);
+    min-width: 180px;
+    padding: 8px 0;
+    margin-top: 8px;
+    opacity: 0;
+    visibility: hidden;
+    transform: translateY(-10px);
+    transition: all 0.3s ease;
+    z-index: 99999;
+}
+
+.admin-menu.show {
+    opacity: 1;
+    visibility: visible;
+    transform: translateY(0);
+}
+
+.admin-item {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 10px 16px;
+    color: #333;
+    text-decoration: none;
+    transition: all 0.2s ease;
+    font-size: 0.9rem;
+}
+
+.admin-item:hover {
+    background: #f0f9ff;
+    color: #1b5e20;
+}
+
+.admin-divider {
+    height: 1px;
+    background: #e5e7eb;
+    margin: 4px 0;
+}
+
+.logout-item {
+    color: #dc2626;
+}
+
+.logout-item:hover {
+    background: #fef2f2;
+    color: #dc2626;
+}
+
+.logout-btn {
+    background: rgba(255,255,255,0.15);
+    border: 1px solid rgba(255,255,255,0.2);
+    color: white;
+    padding: 8px 16px;
+    border-radius: 20px;
+    text-decoration: none;
+    transition: all 0.3s ease;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    font-size: 0.9rem;
+    font-weight: 500;
+    backdrop-filter: blur(10px);
+}
+
+.logout-btn:hover {
+    background: rgba(255,255,255,0.25);
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(0,0,0,0.2);
+}
+
 /* Enhanced Green Theme Styles */
 .header {
     background: linear-gradient(135deg, #0d4f3c 0%, #1b5e20 25%, #2e7d32 50%, #4caf50 75%, #81c784 100%);
@@ -340,7 +577,7 @@
     /* Perfect Layer Controls Alignment */
     .map-controls {
         position: absolute;
-        top: var(--spacing-md);
+        bottom: var(--spacing-md);
         right: var(--spacing-md);
         z-index: 1000;
         display: flex;
@@ -1238,6 +1475,211 @@
         outline: 2px solid #667eea;
         outline-offset: 2px;
     }
+    
+    /* Panel Styles */
+    .panel {
+        position: fixed;
+        top: 20px;
+        right: 20px;
+        width: 400px;
+        max-height: 80vh;
+        background: white;
+        border-radius: 12px;
+        box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+        z-index: 1000;
+        overflow: hidden;
+    }
+    
+    .panel-header {
+        background: linear-gradient(135deg, #1b5e20, #2e7d32);
+        color: white;
+        padding: 15px 20px;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+    }
+    
+    .panel-header h3 {
+        margin: 0;
+        font-size: 16px;
+        font-weight: 600;
+    }
+    
+    .close-btn {
+        background: none;
+        border: none;
+        color: white;
+        font-size: 20px;
+        cursor: pointer;
+        padding: 0;
+        width: 24px;
+        height: 24px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+    }
+    
+    .panel-content {
+        padding: 20px;
+        max-height: calc(80vh - 60px);
+        overflow-y: auto;
+    }
+    
+    /* Breadcrumb Styles */
+    .breadcrumb {
+        display: flex;
+        gap: 8px;
+        margin-bottom: 20px;
+        padding-bottom: 10px;
+        border-bottom: 1px solid #eee;
+    }
+    
+    .breadcrumb-item {
+        padding: 6px 12px;
+        background: #f5f5f5;
+        border-radius: 6px;
+        cursor: pointer;
+        font-size: 12px;
+        transition: all 0.2s ease;
+    }
+    
+    .breadcrumb-item:hover {
+        background: #e0e0e0;
+    }
+    
+    .breadcrumb-item.active {
+        background: #2e7d32;
+        color: white;
+    }
+    
+    /* Navigation Content */
+    .navigation-content {
+        max-height: 400px;
+        overflow-y: auto;
+    }
+    
+    .nav-item {
+        padding: 12px 16px;
+        border: 1px solid #e0e0e0;
+        border-radius: 8px;
+        margin-bottom: 8px;
+        cursor: pointer;
+        transition: all 0.2s ease;
+        background: white;
+    }
+    
+    .nav-item:hover {
+        background: #f8f9fa;
+        border-color: #2e7d32;
+    }
+    
+    .nav-item-header {
+        font-weight: 600;
+        color: #1b5e20;
+        margin-bottom: 4px;
+    }
+    
+    .nav-item-stats {
+        font-size: 12px;
+        color: #666;
+    }
+    
+    /* Search Form */
+    .search-form {
+        margin-bottom: 20px;
+    }
+    
+    .search-form input {
+        width: 100%;
+        padding: 12px 16px;
+        border: 1px solid #ddd;
+        border-radius: 8px;
+        font-size: 14px;
+        margin-bottom: 12px;
+    }
+    
+    .search-filters {
+        display: flex;
+        gap: 8px;
+    }
+    
+    .search-filters select {
+        flex: 1;
+        padding: 8px 12px;
+        border: 1px solid #ddd;
+        border-radius: 6px;
+        font-size: 12px;
+    }
+    
+    /* Search Results */
+    .search-results {
+        max-height: 300px;
+        overflow-y: auto;
+    }
+    
+    .search-result-item {
+        padding: 12px;
+        border: 1px solid #e0e0e0;
+        border-radius: 8px;
+        margin-bottom: 8px;
+        cursor: pointer;
+        transition: all 0.2s ease;
+    }
+    
+    .search-result-item:hover {
+        background: #f8f9fa;
+        border-color: #2e7d32;
+    }
+    
+    .search-result-header {
+        font-weight: 600;
+        color: #1b5e20;
+        margin-bottom: 4px;
+    }
+    
+    .search-result-details {
+        font-size: 12px;
+        color: #666;
+    }
+    
+    /* Filter Sections */
+    .filter-section {
+        margin-bottom: 20px;
+        padding-bottom: 15px;
+        border-bottom: 1px solid #eee;
+    }
+    
+    .filter-section:last-child {
+        border-bottom: none;
+        margin-bottom: 0;
+    }
+    
+    .filter-section h4 {
+        margin: 0 0 10px 0;
+        font-size: 14px;
+        color: #1b5e20;
+    }
+    
+    .filter-section label {
+        display: block;
+        margin-bottom: 8px;
+        font-size: 13px;
+        cursor: pointer;
+    }
+    
+    .filter-section input[type="checkbox"] {
+        margin-right: 8px;
+    }
+    
+    .filter-section input[type="range"] {
+        width: 100%;
+        margin-bottom: 8px;
+    }
+    
+    #area-value {
+        font-size: 12px;
+        color: #666;
+    }
 </style>
 
 </head>
@@ -1257,16 +1699,6 @@
             <div style="font-size: 0.9em; opacity: 0.9;">{{ session.user_role }} Access</div>
         </div>
     </div>
-    <div style="display: flex; gap: 10px;">
-        {% if session.user_role in ['CCF', 'DCF', 'RFO'] %}
-        <a href="{{ url_for('admin_panel') }}" style="background: rgba(255,255,255,0.2); color: white; padding: 8px 16px; border-radius: 6px; text-decoration: none;">
-            🛠️ Admin
-        </a>
-        {% endif %}
-        <a href="{{ url_for('logout') }}" style="background: rgba(255,255,255,0.2); color: white; padding: 8px 16px; border-radius: 6px; text-decoration: none;">
-            🚪 Logout
-        </a>
-    </div>
 </div>
 
     <!-- Debug Status -->
@@ -1274,13 +1706,91 @@
         System: Initializing...
     </div>
 
-    <!-- Enhanced Header -->
-    <header class="header">
-        <div class="header-content">
-            <h1>🌲 FRA Atlas</h1>
-            <p>AI-Powered Forest Rights Monitoring & Decision Support System</p>
+    <!-- Top Navigation Bar -->
+    <nav class="top-navbar">
+        <div class="navbar-brand">
+            <h1 id="dashboard-title">🛡️ FRA Sentinel</h1>
         </div>
-    </header>
+        
+        <div class="navbar-center">
+            <div class="nav-features">
+                <a href="{{ url_for('ai_predictions') }}" class="btn-unified btn-primary nav-btn ai-predictions">
+                    <span class="nav-icon">🔮</span>
+                    <span class="nav-text">AI Predictions</span>
+                </a>
+                <a href="{{ url_for('ai_chatbot') }}" class="btn-unified btn-primary nav-btn ai-chatbot">
+                    <span class="nav-icon">🤖</span>
+                    <span class="nav-text">AI Assistant</span>
+                </a>
+                <a href="{{ url_for('analytics') }}" class="btn-unified btn-primary nav-btn analytics">
+                    <span class="nav-icon">📊</span>
+                    <span class="nav-text">Analytics</span>
+                </a>
+                <a href="{{ url_for('reports') }}" class="btn-unified btn-primary nav-btn reports">
+                    <span class="nav-icon">📈</span>
+                    <span class="nav-text">Reports</span>
+                </a>
+            </div>
+        </div>
+        
+        <div class="navbar-right">
+            <!-- Language Switcher -->
+            <div class="language-switcher">
+                <select id="language-select" onchange="changeLanguage(this.value)">
+                    <option value="english">🇺🇸 EN</option>
+                    <option value="hindi">🇮🇳 हिं</option>
+                    <option value="tamil">🇮🇳 தமி</option>
+                    <option value="telugu">🇮🇳 తెలు</option>
+                    <option value="kannada">🇮🇳 ಕನ್ನ</option>
+                    <option value="malayalam">🇮🇳 മല</option>
+                    <option value="odia">🇮🇳 ଓଡ଼ି</option>
+                    <option value="bengali">🇮🇳 বাংলা</option>
+                </select>
+            </div>
+            
+            <!-- User Profile -->
+            <div class="user-profile">
+                <div class="profile-avatar">
+                    <span class="avatar-icon">👤</span>
+                </div>
+                <div class="profile-info">
+                    <span class="profile-name">{{ session.user_name }}</span>
+                    <span class="profile-role">{{ session.user_role }}</span>
+                </div>
+            </div>
+            
+            <!-- Admin Dropdown -->
+            {% if session.user_role in ['CCF', 'DCF', 'RFO'] %}
+            <div class="admin-dropdown">
+                <button class="admin-btn" onclick="toggleAdminDropdown()">
+                    <span class="admin-icon">🛠️</span>
+                    <span class="admin-text">Admin</span>
+                    <span class="dropdown-arrow">▼</span>
+                </button>
+                <div class="admin-menu" id="admin-menu">
+                    <a href="{{ url_for('admin_dashboard') }}" class="admin-item">
+                        <span class="item-icon">📊</span>
+                        <span class="item-text">Dashboard</span>
+                    </a>
+                    <a href="{{ url_for('admin_panel') }}" class="admin-item">
+                        <span class="item-icon">📄</span>
+                        <span class="item-text">Upload Document</span>
+                    </a>
+                    <div class="admin-divider"></div>
+                    <a href="{{ url_for('logout') }}" class="admin-item logout-item">
+                        <span class="item-icon">🚪</span>
+                        <span class="item-text">Logout</span>
+                    </a>
+                </div>
+            </div>
+            {% else %}
+            <a href="{{ url_for('logout') }}" class="logout-btn">
+                <span class="logout-icon">🚪</span>
+                <span class="logout-text">Logout</span>
+            </a>
+            {% endif %}
+        </div>
+    </nav>
 
     <!-- Main Container -->
     <div class="container">
@@ -1385,10 +1895,104 @@
                         <span class="control-icon">⛶</span> Full
                     </button>
                 </div>
+                
+                
+                
+                <div class="control-group">
+                    <button class="control-button" onclick="showDrillDownPanel()">
+                        <span class="control-icon">🔍</span> Drill Down
+                    </button>
+                    <button class="control-button" onclick="showSearchPanel()">
+                        <span class="control-icon">🔎</span> Search
+                    </button>
+                    <button class="control-button" onclick="showFiltersPanel()">
+                        <span class="control-icon">🎛️</span> Filters
+                    </button>
+                </div>
             </div>
             
             <div id="map"></div>
         </main>
+        
+        <!-- FRA Atlas Drill-down Panel -->
+        <div id="drill-down-panel" class="panel" style="display: none;">
+            <div class="panel-header">
+                <h3>🗺️ FRA Atlas Navigation</h3>
+                <button class="close-btn" onclick="hideDrillDownPanel()">×</button>
+            </div>
+            <div class="panel-content">
+                <div id="navigation-breadcrumb" class="breadcrumb">
+                    <span class="breadcrumb-item active" onclick="loadStates()">States</span>
+                </div>
+                <div id="navigation-content" class="navigation-content">
+                    <!-- Dynamic content will be loaded here -->
+                </div>
+            </div>
+        </div>
+        
+        <!-- Search Panel -->
+        <div id="search-panel" class="panel" style="display: none;">
+            <div class="panel-header">
+                <h3>🔎 Search FRA Data</h3>
+                <button class="close-btn" onclick="hideSearchPanel()">×</button>
+            </div>
+            <div class="panel-content">
+                <div class="search-form">
+                    <input type="text" id="search-input" placeholder="Search by patta holder, village, or tribal group..." 
+                           onkeyup="performSearch()">
+                    <div class="search-filters">
+                        <select id="status-filter" onchange="performSearch()">
+                            <option value="all">All Status</option>
+                            <option value="pending">Pending</option>
+                            <option value="verified">Verified</option>
+                            <option value="approved">Approved</option>
+                        </select>
+                        <select id="type-filter" onchange="performSearch()">
+                            <option value="all">All Types</option>
+                            <option value="IFR">IFR</option>
+                            <option value="CR">CR</option>
+                            <option value="CFR">CFR</option>
+                        </select>
+                    </div>
+                </div>
+                <div id="search-results" class="search-results">
+                    <!-- Search results will be displayed here -->
+                </div>
+            </div>
+        </div>
+        
+        <!-- Filters Panel -->
+        <div id="filters-panel" class="panel" style="display: none;">
+            <div class="panel-header">
+                <h3>🎛️ Map Filters</h3>
+                <button class="close-btn" onclick="hideFiltersPanel()">×</button>
+            </div>
+            <div class="panel-content">
+                <div class="filter-section">
+                    <h4>FRA Claims Status</h4>
+                    <label><input type="checkbox" checked onchange="updateClaimStatusFilter()"> Pending</label>
+                    <label><input type="checkbox" checked onchange="updateClaimStatusFilter()"> Verified</label>
+                    <label><input type="checkbox" checked onchange="updateClaimStatusFilter()"> Approved</label>
+                </div>
+                <div class="filter-section">
+                    <h4>Claim Types</h4>
+                    <label><input type="checkbox" checked onchange="updateClaimTypeFilter()"> IFR (Individual Forest Rights)</label>
+                    <label><input type="checkbox" checked onchange="updateClaimTypeFilter()"> CR (Community Rights)</label>
+                    <label><input type="checkbox" checked onchange="updateClaimTypeFilter()"> CFR (Community Forest Resource)</label>
+                </div>
+                <div class="filter-section">
+                    <h4>Tribal Groups</h4>
+                    <label><input type="checkbox" checked onchange="updateTribalGroupFilter()"> Bhil</label>
+                    <label><input type="checkbox" checked onchange="updateTribalGroupFilter()"> Gond</label>
+                    <label><input type="checkbox" checked onchange="updateTribalGroupFilter()"> Baiga</label>
+                </div>
+                <div class="filter-section">
+                    <h4>Area Range (Hectares)</h4>
+                    <input type="range" id="area-range" min="0" max="10" value="10" onchange="updateAreaFilter()">
+                    <span id="area-value">0-10 hectares</span>
+                </div>
+            </div>
+        </div>
     </div>
 
     <!-- Chatbot Interface -->
@@ -1442,6 +2046,121 @@
     <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
     <script>
         console.log('🚀 FRA Atlas Ultimate Starting...');
+        
+        // Language switching functionality
+        let currentLanguage = 'english';
+        let translations = {};
+        
+        async function changeLanguage(language) {
+            currentLanguage = language;
+            try {
+                const response = await fetch(`/api/translations/${language}`);
+                translations = await response.json();
+                updateUI();
+                console.log(`🌐 Language changed to: ${language}`);
+            } catch (error) {
+                console.error('❌ Failed to load translations:', error);
+            }
+        }
+        
+        function updateUI() {
+            // Update dashboard title
+            const titleElement = document.getElementById('dashboard-title');
+            if (titleElement && translations.dashboard_title) {
+                titleElement.textContent = `🛡️ ${translations.dashboard_title}`;
+            }
+            
+            // Update subtitle
+            const subtitleElement = document.getElementById('dashboard-subtitle');
+            if (subtitleElement && translations.dashboard_subtitle) {
+                subtitleElement.textContent = translations.dashboard_subtitle;
+            }
+            
+            // Update admin link
+            const adminLink = document.getElementById('admin-link');
+            if (adminLink && translations.admin) {
+                adminLink.innerHTML = `🛠️ ${translations.admin}`;
+            }
+            
+            // Update logout link
+            const logoutLink = document.getElementById('logout-link');
+            if (logoutLink && translations.logout) {
+                logoutLink.innerHTML = `🚪 ${translations.logout}`;
+            }
+            
+            // Update control buttons
+            const statesBtn = document.getElementById('states-layer');
+            if (statesBtn && translations.states) {
+                statesBtn.innerHTML = `<span class="control-icon">🗺️</span> ${translations.states}`;
+            }
+            
+            const districtsBtn = document.getElementById('districts-layer');
+            if (districtsBtn && translations.districts) {
+                districtsBtn.innerHTML = `<span class="control-icon">🏛️</span> ${translations.districts}`;
+            }
+            
+            const villagesBtn = document.getElementById('villages-layer');
+            if (villagesBtn && translations.villages) {
+                villagesBtn.innerHTML = `<span class="control-icon">🏘️</span> ${translations.villages}`;
+            }
+            
+            const tribalBtn = document.getElementById('tribal-layer');
+            if (tribalBtn && translations.tribal_areas) {
+                tribalBtn.innerHTML = `<span class="control-icon">👥</span> ${translations.tribal_areas}`;
+            }
+        }
+        
+        // Initialize language on page load
+        document.addEventListener('DOMContentLoaded', function() {
+            // Set default language from session or use English
+            const savedLanguage = '{{ session.language or "english" }}';
+            if (savedLanguage && savedLanguage !== 'english') {
+                document.getElementById('language-select').value = savedLanguage;
+                changeLanguage(savedLanguage);
+            }
+        });
+
+        // Admin dropdown functionality
+        function toggleAdminDropdown() {
+            const menu = document.getElementById('admin-menu');
+            const arrow = document.querySelector('.dropdown-arrow');
+            
+            if (menu.classList.contains('show')) {
+                menu.classList.remove('show');
+                arrow.style.transform = 'rotate(0deg)';
+            } else {
+                menu.classList.add('show');
+                arrow.style.transform = 'rotate(180deg)';
+            }
+        }
+
+        // Close dropdown when clicking outside
+        document.addEventListener('click', function(event) {
+            const dropdown = document.querySelector('.admin-dropdown');
+            if (dropdown && !dropdown.contains(event.target)) {
+                const menu = document.getElementById('admin-menu');
+                const arrow = document.querySelector('.dropdown-arrow');
+                menu.classList.remove('show');
+                arrow.style.transform = 'rotate(0deg)';
+            }
+        });
+
+        // AI Features
+        function showAIPredictions() {
+            alert('🔮 AI Predictions Panel\n\n• Forest Health Forecast\n• Deforestation Risk Analysis\n• Tribal Settlement Growth\n• Climate Impact Predictions\n• Resource Availability Trends');
+        }
+
+        function openChatbot() {
+            alert('🤖 AI Assistant\n\nWelcome to FRA Sentinel AI Assistant!\n\nI can help you with:\n• FRA claim information\n• Forest rights queries\n• Data analysis\n• Report generation\n• System guidance');
+        }
+
+        function showAnalytics() {
+            alert('📊 Advanced Analytics\n\n• Real-time Data Visualization\n• Interactive Charts & Graphs\n• Trend Analysis\n• Performance Metrics\n• Custom Reports');
+        }
+
+        function generateReports() {
+            alert('📈 Report Generation\n\n• Automated FRA Reports\n• Custom Analytics\n• Export Options (PDF, Excel)\n• Scheduled Reports\n• Data Insights');
+        }
         
         class FRAAtlas {
             constructor() {
@@ -1615,6 +2334,10 @@
                                     <p style="margin: 6px 0; color: #333;"><strong>📏 Land Area:</strong> ${props.area_hectares} hectares</p>
                                     <p style="margin: 6px 0; color: #333;"><strong>✅ Status:</strong> <span style="color: #28a745; font-weight: 600;">${props.claim_status}</span></p>
                                     <p style="margin: 6px 0; color: #333;"><strong>📍 Location:</strong> ${props.latitude.toFixed(4)}, ${props.longitude.toFixed(4)}</p>
+                                    ${props.tribal_group ? `<p style="margin: 6px 0; color: #333;"><strong>🏛️ Tribal Group:</strong> ${props.tribal_group}</p>` : ''}
+                                    ${props.family_size ? `<p style="margin: 6px 0; color: #333;"><strong>👥 Family Size:</strong> ${props.family_size} members</p>` : ''}
+                                    ${props.file_id ? `<p style="margin: 6px 0; color: #333;"><strong>📄 File ID:</strong> ${props.file_id}</p>` : ''}
+                                    ${props.uploaded_by ? `<p style="margin: 6px 0; color: #333;"><strong>👤 Uploaded by:</strong> ${props.uploaded_by}</p>` : ''}
                                 </div>
                                 
                                 <button onclick="window.fraAtlas.selectVillage(${JSON.stringify(props).replace(/"/g, '&quot;')})" 
@@ -1857,6 +2580,521 @@
             } else {
                 mapContainer.requestFullscreen();
             }
+        }
+
+        // Boundary layer management
+        let boundaryLayers = {};
+        
+        async function toggleBoundaryLayer(layerType) {
+            const button = document.getElementById(layerType + '-layer');
+            const isActive = button.classList.contains('active');
+            
+            if (isActive) {
+                // Remove layer
+                if (boundaryLayers[layerType]) {
+                    window.fraAtlas.map.removeLayer(boundaryLayers[layerType]);
+                    delete boundaryLayers[layerType];
+                }
+                button.classList.remove('active');
+            } else {
+                // Add layer
+                try {
+                    const response = await fetch(`/api/boundaries/${layerType}`);
+                    const data = await response.json();
+                    
+                    const layer = L.geoJSON(data, {
+                        style: getBoundaryStyle(layerType),
+                        onEachFeature: function(feature, layer) {
+                            const props = feature.properties;
+                            const popupContent = `
+                                <div style="font-family: 'Inter', sans-serif; padding: 15px; min-width: 200px;">
+                                    <h4 style="margin: 0 0 10px 0; color: #1b5e20;">${props.name}</h4>
+                                    <p style="margin: 5px 0; color: #333;"><strong>Type:</strong> ${props.type}</p>
+                                    ${props.state ? `<p style="margin: 5px 0; color: #333;"><strong>State:</strong> ${props.state}</p>` : ''}
+                                    ${props.tribe ? `<p style="margin: 5px 0; color: #333;"><strong>Tribe:</strong> ${props.tribe}</p>` : ''}
+                                    <div style="margin-top: 10px; padding-top: 10px; border-top: 1px solid #eee;">
+                                        <small style="color: #666;">Click to highlight • Hover for details</small>
+                                    </div>
+                                </div>
+                            `;
+                            layer.bindPopup(popupContent);
+                            
+                            // Add hover effects
+                            layer.on('mouseover', function(e) {
+                                this.setStyle(getHighlightStyle(layerType));
+                                this.bringToFront();
+                            });
+                            
+                            layer.on('mouseout', function(e) {
+                                this.setStyle(getBoundaryStyle(layerType));
+                            });
+                            
+                            // Add click-to-highlight functionality
+                            layer.on('click', function(e) {
+                                // Remove highlight from all other features in this layer
+                                layer.eachLayer(function(layer) {
+                                    layer.setStyle(getBoundaryStyle(layerType));
+                                });
+                                
+                                // Highlight clicked feature
+                                this.setStyle(getHighlightStyle(layerType));
+                                this.bringToFront();
+                                
+                                // Show popup
+                                this.openPopup();
+                                
+                                console.log(`🎯 Highlighted ${props.name} (${props.type})`);
+                            });
+                        }
+                    });
+                    
+                    layer.addTo(window.fraAtlas.map);
+                    boundaryLayers[layerType] = layer;
+                    button.classList.add('active');
+                    
+                    console.log(`✅ ${layerType} boundary layer loaded`);
+                } catch (error) {
+                    console.error(`❌ Failed to load ${layerType} layer:`, error);
+                }
+            }
+        }
+        
+        function getBoundaryStyle(layerType) {
+            const styles = {
+                'states': {
+                    color: '#1E3A8A',  // Dark Blue
+                    weight: 3,
+                    opacity: 0.8,
+                    fillColor: '#1E3A8A',
+                    fillOpacity: 0.2,
+                    dashArray: '10, 5'
+                },
+                'districts': {
+                    color: '#F97316',  // Orange
+                    weight: 2,
+                    opacity: 0.7,
+                    fillColor: '#F97316',
+                    fillOpacity: 0.15,
+                    dashArray: '8, 4'
+                },
+                'villages': {
+                    color: '#10B981',  // Light Green
+                    weight: 1.5,
+                    opacity: 0.6,
+                    fillColor: '#10B981',
+                    fillOpacity: 0.2,
+                    dashArray: '5, 3'
+                },
+                'tribal_areas': {
+                    color: '#DC2626',  // Red
+                    weight: 2.5,
+                    opacity: 0.8,
+                    fillColor: '#DC2626',
+                    fillOpacity: 0.25,
+                    dashArray: '12, 6'
+                }
+            };
+            return styles[layerType] || styles['states'];
+        }
+        
+        function getHighlightStyle(layerType) {
+            const styles = {
+                'states': {
+                    color: '#1E3A8A',
+                    weight: 4,
+                    opacity: 1,
+                    fillColor: '#1E3A8A',
+                    fillOpacity: 0.4
+                },
+                'districts': {
+                    color: '#F97316',
+                    weight: 3,
+                    opacity: 1,
+                    fillColor: '#F97316',
+                    fillOpacity: 0.3
+                },
+                'villages': {
+                    color: '#10B981',
+                    weight: 2.5,
+                    opacity: 1,
+                    fillColor: '#10B981',
+                    fillOpacity: 0.4
+                },
+                'tribal_areas': {
+                    color: '#DC2626',
+                    weight: 3.5,
+                    opacity: 1,
+                    fillColor: '#DC2626',
+                    fillOpacity: 0.5
+                }
+            };
+            return styles[layerType] || styles['states'];
+        }
+
+        // FRA Atlas Layer Management
+        let fraLayers = {};
+        
+        async function toggleFRALayer(layerType) {
+            const button = document.getElementById(layerType + '-layer');
+            const isActive = button.classList.contains('active');
+            
+            if (isActive) {
+                // Remove layer
+                if (fraLayers[layerType]) {
+                    window.fraAtlas.map.removeLayer(fraLayers[layerType]);
+                    delete fraLayers[layerType];
+                }
+                button.classList.remove('active');
+            } else {
+                // Add FRA layer
+                try {
+                    const layer = await createFRALayer(layerType);
+                    layer.addTo(window.fraAtlas.map);
+                    fraLayers[layerType] = layer;
+                    button.classList.add('active');
+                    
+                    console.log(`✅ ${layerType} FRA layer loaded`);
+                } catch (error) {
+                    console.error(`❌ Failed to load ${layerType} FRA layer:`, error);
+                }
+            }
+        }
+        
+        async function createFRALayer(layerType) {
+            const layerStyles = {
+                'claims': {
+                    color: '#FF6B35',
+                    weight: 2,
+                    opacity: 0.8,
+                    fillColor: '#FF6B35',
+                    fillOpacity: 0.3,
+                    radius: 8
+                },
+                'forest': {
+                    color: '#228B22',
+                    weight: 1,
+                    opacity: 0.6,
+                    fillColor: '#228B22',
+                    fillOpacity: 0.4
+                },
+                'water': {
+                    color: '#4169E1',
+                    weight: 1,
+                    opacity: 0.7,
+                    fillColor: '#4169E1',
+                    fillOpacity: 0.5
+                },
+                'agricultural': {
+                    color: '#FFD700',
+                    weight: 1,
+                    opacity: 0.6,
+                    fillColor: '#FFD700',
+                    fillOpacity: 0.3
+                }
+            };
+            
+            const style = layerStyles[layerType];
+            const layerGroup = L.layerGroup();
+            
+            // Load FRA data and create markers/polygons
+            const response = await fetch('/api/fra-atlas/states');
+            const data = await response.json();
+            
+            for (const state of data.states) {
+                // Create markers for each state with FRA data
+                const marker = L.circleMarker([21.8225, 75.6102], {
+                    ...style,
+                    popup: `${state.name}: ${state.total_pattas} pattas, ${state.total_area_hectares} hectares`
+                });
+                
+                marker.bindPopup(`
+                    <div style="font-family: 'Inter', sans-serif; padding: 15px; min-width: 200px;">
+                        <h4 style="margin: 0 0 10px 0; color: #1b5e20;">${state.name}</h4>
+                        <p style="margin: 5px 0; color: #333;"><strong>Districts:</strong> ${state.districts_count}</p>
+                        <p style="margin: 5px 0; color: #333;"><strong>Total Pattas:</strong> ${state.total_pattas}</p>
+                        <p style="margin: 5px 0; color: #333;"><strong>Total Area:</strong> ${state.total_area_hectares} hectares</p>
+                        <p style="margin: 5px 0; color: #333;"><strong>Forest Cover:</strong> ${state.avg_forest_cover}%</p>
+                    </div>
+                `);
+                
+                layerGroup.addLayer(marker);
+            }
+            
+            return layerGroup;
+        }
+
+        // Panel Management Functions
+        function showDrillDownPanel() {
+            hideAllPanels();
+            document.getElementById('drill-down-panel').style.display = 'block';
+            loadStates();
+        }
+        
+        function hideDrillDownPanel() {
+            document.getElementById('drill-down-panel').style.display = 'none';
+        }
+        
+        function showSearchPanel() {
+            hideAllPanels();
+            document.getElementById('search-panel').style.display = 'block';
+        }
+        
+        function hideSearchPanel() {
+            document.getElementById('search-panel').style.display = 'none';
+        }
+        
+        function showFiltersPanel() {
+            hideAllPanels();
+            document.getElementById('filters-panel').style.display = 'block';
+        }
+        
+        function hideFiltersPanel() {
+            document.getElementById('filters-panel').style.display = 'none';
+        }
+        
+        function hideAllPanels() {
+            document.getElementById('drill-down-panel').style.display = 'none';
+            document.getElementById('search-panel').style.display = 'none';
+            document.getElementById('filters-panel').style.display = 'none';
+        }
+
+        // Drill-down Navigation Functions
+        async function loadStates() {
+            try {
+                const response = await fetch('/api/fra-atlas/states');
+                const data = await response.json();
+                
+                const content = document.getElementById('navigation-content');
+                content.innerHTML = '';
+                
+                for (const state of data.states) {
+                    const item = document.createElement('div');
+                    item.className = 'nav-item';
+                    item.onclick = () => loadDistricts(state.name);
+                    item.innerHTML = `
+                        <div class="nav-item-header">${state.name}</div>
+                        <div class="nav-item-stats">
+                            ${state.districts_count} districts • ${state.total_pattas} pattas • ${state.total_area_hectares} hectares
+                        </div>
+                    `;
+                    content.appendChild(item);
+                }
+                
+                updateBreadcrumb(['States']);
+            } catch (error) {
+                console.error('Failed to load states:', error);
+            }
+        }
+        
+        async function loadDistricts(stateName) {
+            try {
+                const response = await fetch(`/api/fra-atlas/states/${encodeURIComponent(stateName)}/districts`);
+                const data = await response.json();
+                
+                const content = document.getElementById('navigation-content');
+                content.innerHTML = '';
+                
+                for (const district of data.districts) {
+                    const item = document.createElement('div');
+                    item.className = 'nav-item';
+                    item.onclick = () => loadBlocks(stateName, district.name);
+                    item.innerHTML = `
+                        <div class="nav-item-header">${district.name}</div>
+                        <div class="nav-item-stats">
+                            ${district.blocks_count} blocks • ${district.total_pattas} pattas • ${district.total_area_hectares} hectares
+                        </div>
+                    `;
+                    content.appendChild(item);
+                }
+                
+                updateBreadcrumb(['States', stateName]);
+            } catch (error) {
+                console.error('Failed to load districts:', error);
+            }
+        }
+        
+        async function loadBlocks(stateName, districtName) {
+            try {
+                const response = await fetch(`/api/fra-atlas/states/${encodeURIComponent(stateName)}/districts/${encodeURIComponent(districtName)}/blocks`);
+                const data = await response.json();
+                
+                const content = document.getElementById('navigation-content');
+                content.innerHTML = '';
+                
+                for (const block of data.blocks) {
+                    const item = document.createElement('div');
+                    item.className = 'nav-item';
+                    item.onclick = () => loadVillages(stateName, districtName, block.name);
+                    item.innerHTML = `
+                        <div class="nav-item-header">${block.name}</div>
+                        <div class="nav-item-stats">
+                            ${block.villages_count} villages • ${block.total_pattas} pattas • ${block.total_area_hectares} hectares
+                        </div>
+                    `;
+                    content.appendChild(item);
+                }
+                
+                updateBreadcrumb(['States', stateName, districtName]);
+            } catch (error) {
+                console.error('Failed to load blocks:', error);
+            }
+        }
+        
+        async function loadVillages(stateName, districtName, blockName) {
+            try {
+                const response = await fetch(`/api/fra-atlas/states/${encodeURIComponent(stateName)}/districts/${encodeURIComponent(districtName)}/blocks/${encodeURIComponent(blockName)}/villages`);
+                const data = await response.json();
+                
+                const content = document.getElementById('navigation-content');
+                content.innerHTML = '';
+                
+                for (const village of data.villages) {
+                    const item = document.createElement('div');
+                    item.className = 'nav-item';
+                    item.onclick = () => loadPattaHolders(stateName, districtName, blockName, village.name);
+                    item.innerHTML = `
+                        <div class="nav-item-header">${village.name}</div>
+                        <div class="nav-item-stats">
+                            ${village.patta_holders_count} patta holders • ${village.total_area_hectares} hectares
+                            <br>Forest: ${village.forest_cover_percent}% • Water: ${village.water_bodies_count} bodies
+                        </div>
+                    `;
+                    content.appendChild(item);
+                }
+                
+                updateBreadcrumb(['States', stateName, districtName, blockName]);
+            } catch (error) {
+                console.error('Failed to load villages:', error);
+            }
+        }
+        
+        async function loadPattaHolders(stateName, districtName, blockName, villageName) {
+            try {
+                const response = await fetch(`/api/fra-atlas/states/${encodeURIComponent(stateName)}/districts/${encodeURIComponent(districtName)}/blocks/${encodeURIComponent(blockName)}/villages/${encodeURIComponent(villageName)}/patta-holders`);
+                const data = await response.json();
+                
+                const content = document.getElementById('navigation-content');
+                content.innerHTML = '';
+                
+                for (const patta of data.patta_holders) {
+                    const item = document.createElement('div');
+                    item.className = 'nav-item';
+                    item.innerHTML = `
+                        <div class="nav-item-header">${patta.name}</div>
+                        <div class="nav-item-stats">
+                            ${patta.tribal_group} • ${patta.claim_type} • ${patta.area_hectares} hectares
+                            <br>Status: ${patta.status} • Literacy: ${patta.socio_economic.literacy}
+                        </div>
+                    `;
+                    content.appendChild(item);
+                }
+                
+                updateBreadcrumb(['States', stateName, districtName, blockName, villageName]);
+            } catch (error) {
+                console.error('Failed to load patta holders:', error);
+            }
+        }
+        
+        function updateBreadcrumb(path) {
+            const breadcrumb = document.getElementById('navigation-breadcrumb');
+            breadcrumb.innerHTML = '';
+            
+            for (let i = 0; i < path.length; i++) {
+                const item = document.createElement('span');
+                item.className = 'breadcrumb-item';
+                if (i === path.length - 1) item.classList.add('active');
+                
+                const pathArray = path.slice(0, i + 1);
+                item.onclick = () => {
+                    if (pathArray.length === 1) loadStates();
+                    else if (pathArray.length === 2) loadDistricts(pathArray[1]);
+                    else if (pathArray.length === 3) loadBlocks(pathArray[1], pathArray[2]);
+                    else if (pathArray.length === 4) loadVillages(pathArray[1], pathArray[2], pathArray[3]);
+                };
+                
+                item.textContent = path[i];
+                breadcrumb.appendChild(item);
+            }
+        }
+
+        // Search Functions
+        async function performSearch() {
+            const query = document.getElementById('search-input').value;
+            const statusFilter = document.getElementById('status-filter').value;
+            const typeFilter = document.getElementById('type-filter').value;
+            
+            if (query.length < 2) {
+                document.getElementById('search-results').innerHTML = '';
+                return;
+            }
+            
+            try {
+                const params = new URLSearchParams({
+                    q: query,
+                    status: statusFilter,
+                    type: typeFilter
+                });
+                
+                const response = await fetch(`/api/fra-atlas/search?${params}`);
+                const data = await response.json();
+                
+                displaySearchResults(data.results);
+            } catch (error) {
+                console.error('Search failed:', error);
+            }
+        }
+        
+        function displaySearchResults(results) {
+            const container = document.getElementById('search-results');
+            container.innerHTML = '';
+            
+            if (results.length === 0) {
+                container.innerHTML = '<div style="text-align: center; color: #666; padding: 20px;">No results found</div>';
+                return;
+            }
+            
+            for (const result of results) {
+                const item = document.createElement('div');
+                item.className = 'search-result-item';
+                item.onclick = () => {
+                    // Center map on result coordinates
+                    window.fraAtlas.map.setView(result.coordinates, 12);
+                    hideSearchPanel();
+                };
+                
+                item.innerHTML = `
+                    <div class="search-result-header">${result.patta_holder}</div>
+                    <div class="search-result-details">
+                        ${result.village}, ${result.block}, ${result.district}, ${result.state}
+                        <br>${result.tribal_group} • ${result.claim_type} • ${result.area_hectares} hectares • ${result.status}
+                    </div>
+                `;
+                
+                container.appendChild(item);
+            }
+        }
+
+        // Filter Functions
+        function updateClaimStatusFilter() {
+            console.log('Claim status filter updated');
+            // Implement filter logic
+        }
+        
+        function updateClaimTypeFilter() {
+            console.log('Claim type filter updated');
+            // Implement filter logic
+        }
+        
+        function updateTribalGroupFilter() {
+            console.log('Tribal group filter updated');
+            // Implement filter logic
+        }
+        
+        function updateAreaFilter() {
+            const value = document.getElementById('area-range').value;
+            document.getElementById('area-value').textContent = `0-${value} hectares`;
+            console.log('Area filter updated:', value);
+            // Implement filter logic
         }
 
         // Chatbot functionality
